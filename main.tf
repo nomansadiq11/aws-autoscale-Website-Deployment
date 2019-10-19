@@ -1,7 +1,6 @@
 resource "aws_vpc" "my_vpc" {
     cidr_block       = "${var.VPC_cidr_block}"
     enable_dns_hostnames = true
-
     tags = {
         Name = "${var.TagName}"
     }
@@ -90,18 +89,12 @@ resource "aws_launch_configuration" "web" {
 
   image_id = "${var.Instance_Image_Id}" 
   instance_type = "${var.Instance_Type}"
-  key_name = "${var.TagName}"
+  key_name = "${var.KeyPair_Name}"
 
   security_groups = ["${aws_security_group.allow_http.id}"]
   associate_public_ip_address = true
 
-  user_data = <<USER_DATA
-#!/bin/bash
-yum update
-amazon-linux-extras install nginx1
-chkconfig nginx on
-service nginx start
-  USER_DATA
+  user_data = "${file("user_data.sh")}"
 
   lifecycle {
     create_before_destroy = true
@@ -162,8 +155,8 @@ resource "aws_autoscaling_group" "web" {
     name = "${aws_launch_configuration.web.name}-asg"
 
     min_size             = 1
-    desired_capacity     = 2
-    max_size             = 4
+    desired_capacity     = 1
+    max_size             = 1
 
     health_check_type    = "ELB"
     load_balancers= [
