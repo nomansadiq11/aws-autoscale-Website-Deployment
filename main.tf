@@ -1,9 +1,9 @@
 resource "aws_vpc" "my_vpc" {
-    cidr_block       = "10.0.0.0/16"
+    cidr_block       = "${var.VPC_cidr_block}"
     enable_dns_hostnames = true
 
     tags = {
-        Name = "My VPC"
+        Name = "${var.TagName}"
     }
 }
 
@@ -13,7 +13,7 @@ resource "aws_subnet" "public_us_east_1a" {
     availability_zone = "us-east-1a"
 
     tags = {
-        Name = "Public Subnet us-east-1a"
+        Name = "${var.TagName}"
     }
 }
 
@@ -23,7 +23,7 @@ resource "aws_subnet" "public_us_east_1b" {
     availability_zone = "us-east-1b"
 
     tags = {
-        Name = "Public Subnet us-east-1b"
+        Name = "${var.TagName}"
     }
 }
 
@@ -31,7 +31,7 @@ resource "aws_internet_gateway" "my_vpc_igw" {
     vpc_id = "${aws_vpc.my_vpc.id}"
 
     tags = {
-        Name = "My VPC - Internet Gateway"
+        Name = "${var.TagName}"
     }
 }
 
@@ -44,7 +44,7 @@ resource "aws_route_table" "my_vpc_public" {
     }
 
     tags = {
-        Name = "Public Subnets Route Table for My VPC"
+        Name = "${var.TagName}"
     }
 }
 
@@ -80,7 +80,7 @@ resource "aws_security_group" "allow_http" {
   }
 
   tags =  {
-    Name = "Allow HTTP Security Group"
+    Name = "${var.TagName}"
   }
 }
 
@@ -88,9 +88,9 @@ resource "aws_security_group" "allow_http" {
 resource "aws_launch_configuration" "web" {
   name_prefix = "web-"
 
-  image_id = "ami-0b69ea66ff7391e80" # Amazon Linux AMI 2018.03.0 (HVM)
-  instance_type = "t2.micro"
-  key_name = "devopstest"
+  image_id = "${var.Instance_Image_Id}" 
+  instance_type = "${var.Instance_Type}"
+  key_name = "${var.TagName}"
 
   security_groups = ["${aws_security_group.allow_http.id}"]
   associate_public_ip_address = true
@@ -128,7 +128,7 @@ resource "aws_security_group" "elb_http" {
     }
 
     tags  = {
-        Name = "Allow HTTP through ELB Security Group"
+        Name = "${var.TagName}"
     }
 }
 
@@ -194,7 +194,7 @@ resource "aws_autoscaling_group" "web" {
     }
 
     tag  {
-        key                 = "Name"
+        key                 = "${var.TagName}"
         value               = "web"
         propagate_at_launch = true
     }

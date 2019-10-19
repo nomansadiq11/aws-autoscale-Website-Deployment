@@ -11,4 +11,4 @@ Following AWS services will be use
 - ELB
 - Launch Configuration
 - User Data which having install the nginx on ec2 instances and available port 80
-- Autoscalling Group 
+- Autoscaling group
