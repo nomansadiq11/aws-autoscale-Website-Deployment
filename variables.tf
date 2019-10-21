@@ -1,14 +1,14 @@
 variable "TagName" {
-    default = "Development for this"
+    default = "Development"
 }
 
 variable "VPC_cidr_block" {
     default = "10.0.0.0/16"
 }
 
-variable "VPC_region" {
-    default = "us-east-1"
-}
+# variable "VPC_region" {
+#     default = "us-east-1"
+# }
 variable "KeyPair_Name"{
     default = "devopstest"
 }
