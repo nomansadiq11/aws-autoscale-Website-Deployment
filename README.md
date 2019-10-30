@@ -1,4 +1,4 @@
-# aws-autoscale-Website-Deployment
+# AWS autoscaling website deployment
 
 Following AWS services will be use 
 
